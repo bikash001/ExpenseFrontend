@@ -27,7 +27,7 @@ require(['backbone', './main'],
 	function(Backbone, Router) {
 		$(function() {
 			var router = new Router();
-			window.Router = router;
+			// window.router = router;
 			Backbone.history.start();
 			router.navigate("/");
 		});

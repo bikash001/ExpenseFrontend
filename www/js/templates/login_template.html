@@ -1,0 +1,29 @@
+<div class="col-xs-12 text-center" id="first-body">
+	<% if (data.login) { %>
+		<h2>Login Page</h2>
+	<%} else {%>
+		<h2>Register</h2>
+	<%}%>
+	<form id="form">
+	<% if (!data.login) {%>
+	  Name:<br>
+	  <input type="text" name="name">
+	  <br>
+	  email:<br>
+	  <input type="text" name="email">
+	  <br>
+	<% } %>
+	  mobile:<br>
+	  <input type="text" name="phone">
+	  <br>
+	  password:<br>
+	  <input type="password" name="password">
+	  <br>
+	<% if (!data.login) {%>
+	  confirm password:<br>
+	  <input type="password" name="cpassword">
+	  <br>
+	<% } %>
+	  <input type="button" id="submit-btn" value="Submit">
+	</form>
+</div>

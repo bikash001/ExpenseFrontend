@@ -4,22 +4,23 @@ define(['underscore', 'backbone', 'jquery', 'app'],
             routes: {
                 '': 'home',
                 '/': "home",
-                'register': "register",
-                'login': "login",
+                'firstpage': "firstpage",
                 'about': "about",
                 'group': "group",
                 
             },
             home: function() {
+                var that = this;
                 require(['views/home_view'],
                     function(HomeView) {
-                        new HomeView();
+                       this.view = new HomeView();
                     });
             },
-            register: function() {
-                require(['views/register_view'],
-                    function(RegisterView) {
-                        new RegisterView();
+            firstpage: function() {
+                var that = this;
+                require(['views/firstpage_view'],
+                    function(FirstPageView) {
+                        that.view = new FirstPageView();
                     });
             }
         });
