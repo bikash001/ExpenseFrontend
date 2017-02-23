@@ -15,6 +15,12 @@ define(['underscore', 'backbone', 'jquery', 'app'],
                     function(HomeView) {
                         new HomeView();
                     });
+            },
+            register: function() {
+                require(['views/register_view'],
+                    function(RegisterView) {
+                        new RegisterView();
+                    });
             }
         });
         console.log("router");
