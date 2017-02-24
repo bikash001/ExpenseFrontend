@@ -67,7 +67,7 @@ define(['underscore', 'backbone', 'jquery', "text!templates/firstpage_template.h
 					if (_.isEmpty(obj["username"] || _.isEmpty(obj["password"]))) {
 						console.log("empty field");
 					} else {
-						this.sendData(obj, "/login")
+						this.sendData(obj, "/login/")
 					}
 				} else {
 					obj["name"] = els[0].value;
