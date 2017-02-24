@@ -35,18 +35,21 @@ define(['underscore', 'backbone', 'jquery', "text!templates/firstpage_template.h
 				});
 			},
 			sendData: function(dataObj, endpoint) {
-				var baseurl = "http://127.0.0.1:8001";
+				var baseurl = "http://192.168.1.100:8001";
 				$.ajax({
 				  type: "POST",
 				  url: baseurl + endpoint,
 				  data: dataObj,
 				  dataType: "json",
-				  success: function(){
+				  success: function(dataVal){
 				  	console.log("success");
 				  	if (_.isEqual(endpoint, "/signup")) { 
 				  		localStorage.setItem("user-local-data", JSON.stringify({"name": dataObj["name"],
 						"email": dataObj["email"], "mobile": dataObj["mobile"]}));
+				  	} else {
+				  		localStorage.setItem("user-local-data", JSON.stringify({"token": dataVal.token}));
 				  	}
+				  	console.log(dataVal);
 					Backbone.history.navigate("/", true);
 				  },
 				  error: function(val) {
@@ -64,7 +67,7 @@ define(['underscore', 'backbone', 'jquery', "text!templates/firstpage_template.h
 					if (_.isEmpty(obj["username"] || _.isEmpty(obj["password"]))) {
 						console.log("empty field");
 					} else {
-						this.sendData(obj, "/login/")
+						this.sendData(obj, "/login")
 					}
 				} else {
 					obj["name"] = els[0].value;

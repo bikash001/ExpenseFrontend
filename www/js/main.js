@@ -24,7 +24,6 @@ define(['underscore', 'backbone', 'jquery', 'app'],
                     });
             }
         });
-        console.log("router");
         return Router;
     }
 );

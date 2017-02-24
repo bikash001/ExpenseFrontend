@@ -29,7 +29,7 @@ require(['backbone', './main'],
 			var router = new Router();
 			// window.router = router;
 			Backbone.history.start();
-			router.navigate("/");
+			// router.navigate("/");
 		});
 	}
 );
