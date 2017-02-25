@@ -1,7 +1,9 @@
 define(['underscore', 'backbone', 'jquery', "text!templates/firstpage_template.html",
-	"text!templates/login_template.html"],
-	function(_, Backbone, $, FirstPageTemplate, LoginTemplate) {
+	"text!templates/login_template.html", "text!templates/forgot_template.html"],
+	function(_, Backbone, $, FirstPageTemplate, LoginTemplate, ForgotTemplate) {
 		var FirstPageView = Backbone.View.extend({
+			tagName: "div",
+			className: "col-xs-12",
 			template: _.template(FirstPageTemplate),
 			events: {
 				'click #register-btn': 'register',
@@ -12,30 +14,52 @@ define(['underscore', 'backbone', 'jquery', "text!templates/firstpage_template.h
 			},
 			render: function() {
 				this.$el.html(this.template());
-				$('#middle-section').empty();
-				$('#middle-section').append(this.el);
+				$('#main-container').empty();
+				$('#main-container').append(this.el);
 				return this;
 			},
 			register: function() {
 				var compiled_template = _.template(LoginTemplate);
 				this.$el.html(compiled_template({"data": {"login": false}}));
-				$('#middle-section').empty();
-				$('#middle-section').append(this.el);
-				$('#submit-btn').on('click', {"that": this}, function(event) {
+				$('#main-container').empty();
+				$('#main-container').append(this.el);
+				$('#signin-btn').on('click', {"that": this}, function(event) {
+					$("#signin-btn").off("click");
 					event.data.that.validateForm(false);
 				});
+			},
+			forgot: function() {
+				console.log("inside forgot");
+				var compiled_template = _.template(ForgotTemplate);
+				this.$el.html(compiled_template());
+				$("#main-container").empty();
+				$("#main-container").append(this.el);
 			},
 			login: function() {
 				var compiled_template = _.template(LoginTemplate);
 				this.$el.html(compiled_template({"data": {"login": true}}));
-				$('#middle-section').empty();
-				$('#middle-section').append(this.el);
-				$('#submit-btn').on('click', {"that": this}, function(event) {
+				$('#main-container').empty();
+				$('#main-container').append(this.el);
+				$('#login-btn').on('click', {"that": this}, function(event) {
+					event.data.that.removeLoginHandler();
 					event.data.that.validateForm(true);
 				});
+				$('#signin-btn').on('click', {"that": this}, function(event) {
+					event.data.that.removeLoginHandler();
+					event.data.that.register();
+				});
+				$('#forgot-btn').on('click', {"that": this}, function(event) {
+					event.data.that.removeLoginHandler();
+					event.data.that.forgot();
+				});
+			},
+			removeLoginHandler: function() {
+				$("#login-btn").off("click");
+				$("#signin-btn").off("click");
+				$("#forgot-btn").off("click");
 			},
 			sendData: function(dataObj, endpoint) {
-				var baseurl = "http://192.168.1.100:8001";
+				var baseurl = "http://localhost:8001";
 				$.ajax({
 				  type: "POST",
 				  url: baseurl + endpoint,
@@ -60,7 +84,7 @@ define(['underscore', 'backbone', 'jquery', "text!templates/firstpage_template.h
 			},
 			validateForm: function(login) {
 				var obj = {};
-				var els = $("#form").find("input");
+				var els = $("#form-data").find("input");
 				if (login) {
 					obj["username"] = els[0].value;
 					obj["password"] = els[1].value;

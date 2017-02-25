@@ -1,5 +1,5 @@
 define(['underscore', 'backbone', 'jquery', 'app'],
-    function(_, Backbone, $) {
+    function(_, Backbone, $, NavHome) {
         var Router = Backbone.Router.extend({
             routes: {
                 '': 'home',

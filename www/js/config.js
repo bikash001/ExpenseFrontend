@@ -20,6 +20,11 @@ require.config({
 		bootstrap: {
 			deps: ["jquery"]
 		}
+	},
+	map: {
+		"*" : {
+			"css" : "/js/lib/require-css/css.js"
+		}
 	}
 });
 
@@ -27,9 +32,7 @@ require(['backbone', './main'],
 	function(Backbone, Router) {
 		$(function() {
 			var router = new Router();
-			// window.router = router;
 			Backbone.history.start();
-			// router.navigate("/");
 		});
 	}
 );
