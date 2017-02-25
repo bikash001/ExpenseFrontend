@@ -33,6 +33,7 @@ require(['backbone', './main'],
 		$(function() {
 			var router = new Router();
 			Backbone.history.start();
+			Backbone.history.navigate("home",true);
 		});
 	}
 );

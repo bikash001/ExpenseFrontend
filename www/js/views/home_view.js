@@ -46,7 +46,7 @@ define(['underscore', 'backbone', 'jquery', 'lib/slideout', "text!templates/home
 
 			},
 			groups: function() {
-
+				
 			},
 			logout: function() {
 				var baseurl = "http://localhost:8001";

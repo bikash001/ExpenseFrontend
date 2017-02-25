@@ -1,30 +1,26 @@
-define(['underscore', 'backbone', 'jquery', "text!templates/firstpage_template.html",
-	"text!templates/login_template.html", "text!templates/forgot_template.html"],
-	function(_, Backbone, $, FirstPageTemplate, LoginTemplate, ForgotTemplate) {
+define(['underscore', 'backbone', 'jquery', 'lib/bootbox.min',
+	"text!templates/login_template.html", "text!templates/forgot_template.html", "lib/bootstrap.min",
+	"css!../../css/firstpage"],
+	function(_, Backbone, $, Bootbox, LoginTemplate, ForgotTemplate) {
 		var FirstPageView = Backbone.View.extend({
 			tagName: "div",
 			className: "col-xs-12",
-			template: _.template(FirstPageTemplate),
+			template: _.template(LoginTemplate),
 			events: {
-				'click #register-btn': 'register',
-				'click #login-btn': 'login'
+				
 			},
 			initialize: function() {
 				this.render();
 			},
 			render: function() {
-				this.$el.html(this.template());
-				$('#main-container').empty();
-				$('#main-container').append(this.el);
+				this.login();
 				return this;
 			},
 			register: function() {
-				var compiled_template = _.template(LoginTemplate);
-				this.$el.html(compiled_template({"data": {"login": false}}));
+				this.$el.html(this.template({"data": {"login": false}}));
 				$('#main-container').empty();
 				$('#main-container').append(this.el);
 				$('#signin-btn').on('click', {"that": this}, function(event) {
-					$("#signin-btn").off("click");
 					event.data.that.validateForm(false);
 				});
 			},
@@ -36,20 +32,17 @@ define(['underscore', 'backbone', 'jquery', "text!templates/firstpage_template.h
 				$("#main-container").append(this.el);
 			},
 			login: function() {
-				var compiled_template = _.template(LoginTemplate);
-				this.$el.html(compiled_template({"data": {"login": true}}));
+				this.$el.html(this.template({"data": {"login": true}}));
 				$('#main-container').empty();
 				$('#main-container').append(this.el);
 				$('#login-btn').on('click', {"that": this}, function(event) {
-					event.data.that.removeLoginHandler();
 					event.data.that.validateForm(true);
 				});
 				$('#signin-btn').on('click', {"that": this}, function(event) {
-					event.data.that.removeLoginHandler();
 					event.data.that.register();
 				});
 				$('#forgot-btn').on('click', {"that": this}, function(event) {
-					event.data.that.removeLoginHandler();
+					console.log("forgot");
 					event.data.that.forgot();
 				});
 			},
@@ -59,6 +52,7 @@ define(['underscore', 'backbone', 'jquery', "text!templates/firstpage_template.h
 				$("#forgot-btn").off("click");
 			},
 			sendData: function(dataObj, endpoint) {
+				var that = this;
 				var baseurl = "http://localhost:8001";
 				$.ajax({
 				  type: "POST",
@@ -70,16 +64,26 @@ define(['underscore', 'backbone', 'jquery', "text!templates/firstpage_template.h
 				  	if (_.isEqual(endpoint, "/signup")) { 
 				  		localStorage.setItem("user-local-data", JSON.stringify({"name": dataObj["name"],
 						"email": dataObj["email"], "mobile": dataObj["mobile"]}));
+						that.removeLoginHandler();
 				  	} else {
+				  		$("#signin-btn").off("click");
 				  		localStorage.setItem("user-local-data", JSON.stringify({"token": dataVal.token}));
 				  	}
 				  	console.log(dataVal);
-					Backbone.history.navigate("/", true);
+					Backbone.history.navigate("home", true);
 				  },
 				  error: function(val) {
 				  	console.log("failure");
 				  	console.log(val);
 				  }
+				});
+			},
+			alert: function(ttl, msg) {
+				Bootbox.alert({
+					size: "small",
+					  title: ttl,
+					  className: "small-text",
+					  message: msg
 				});
 			},
 			validateForm: function(login) {
@@ -88,10 +92,12 @@ define(['underscore', 'backbone', 'jquery', "text!templates/firstpage_template.h
 				if (login) {
 					obj["username"] = els[0].value;
 					obj["password"] = els[1].value;
-					if (_.isEmpty(obj["username"] || _.isEmpty(obj["password"]))) {
-						console.log("empty field");
+					if (_.isEmpty(obj["username"])) {
+						this.alert("Login Error", "mobile can't be empty");
+					} else if (_.isEmpty(obj["password"])) {
+						this.alert("Login Error", "password can't be empty");
 					} else {
-						this.sendData(obj, "/login/")
+						this.sendData(obj, "/login/");
 					}
 				} else {
 					obj["name"] = els[0].value;
@@ -100,12 +106,15 @@ define(['underscore', 'backbone', 'jquery', "text!templates/firstpage_template.h
 					obj["username"] = els[2].value;
 					obj["password"] = els[3].value;
 					if (_.isEmpty(obj["name"])) {
-						console.log("empty field");
-						console.log(obj);
+						this.alert("Sign-in Error", "name can't be empty");
+					} else if (_.isEmpty(obj["email"])) {
+						this.alert("Sign-in Error", "email can't be empty");
+					} else if (_.isEmpty(obj["mobile"])) {
+						this.alert("Sign-in Error", "mobile can't be empty");
 					} else if (!_.isEqual(els[3].value, els[4].value)) {
-						console.log("password didn't match.")
+						this.alert("Sign-in Error", "both password didn't match")
 					} else {
-						this.sendData(obj, "/signup")
+						this.sendData(obj, "/signup");
 					}
 				}
 			},

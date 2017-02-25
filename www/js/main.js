@@ -2,8 +2,7 @@ define(['underscore', 'backbone', 'jquery', 'app'],
     function(_, Backbone, $, NavHome) {
         var Router = Backbone.Router.extend({
             routes: {
-                '': 'home',
-                '/': "home",
+                'home': "home",
                 'firstpage': "firstpage",
                 'about': "about",
                 'group': "group",
@@ -11,6 +10,7 @@ define(['underscore', 'backbone', 'jquery', 'app'],
             },
             home: function() {
                 var that = this;
+                console.log("routing");
                 require(['views/home_view'],
                     function(HomeView) {
                        this.view = new HomeView();
