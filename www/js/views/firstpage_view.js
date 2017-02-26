@@ -62,15 +62,15 @@ define(['underscore', 'backbone', 'jquery', 'lib/bootbox.min',
 				  success: function(dataVal){
 				  	console.log("success");
 				  	if (_.isEqual(endpoint, "/signup")) { 
-				  		localStorage.setItem("user-local-data", JSON.stringify({"name": dataObj["name"],
-						"email": dataObj["email"], "mobile": dataObj["mobile"]}));
+				  // 		localStorage.setItem("user-local-data", JSON.stringify({"name": dataObj["name"],
+						// "email": dataObj["email"], "mobile": dataObj["mobile"]}));
 						that.removeLoginHandler();
+						that.login();
 				  	} else {
 				  		$("#signin-btn").off("click");
-				  		localStorage.setItem("user-local-data", JSON.stringify({"token": dataVal.token}));
+				  		localStorage.setItem("user-token", JSON.stringify({"token": dataVal.token}));
+				  		Backbone.history.navigate("home",{"trigger": true, "replace": true});
 				  	}
-				  	console.log(dataVal);
-					Backbone.history.navigate("home", true);
 				  },
 				  error: function(val) {
 				  	console.log("failure");

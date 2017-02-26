@@ -2,3 +2,6 @@
 	text-transform: none;
 	text-align: center;
 }
+.hide {
+	display: none !important;
+}

@@ -1,0 +1,38 @@
+<% _.each(groups, function(gp) {
+var index = _.indexOf(gp.users, user);%>
+<div id="group-<%=gp.id%>" class="card" style="width: 100%; margin-bottom: 15px; margin-top: 15px;">
+<div class="card-header">
+  <div class="row">
+    <div class="col-xs-6" style="font-size: 20px;">
+        <%=gp.name%>
+    </div>
+    <div class="col-xs-6" align="right">
+      <% if(gp.val < 0) {%>
+      You are owed <%=-1 * gp.val%>
+      <%} else {%>
+      You owe <%=gp.val%>
+      <%}%>
+    </div>
+  </div>
+</div>
+<div class="row" style="margin: 0; padding: 10px; background-color: white;">
+    <div class="col-xs-12">
+      <% var totalOwe = 0;
+      for (var i=0; i<gp.users.length; ++i) {
+        if (i == index) {
+          continue;
+        }
+        if (gp.bals[i] < 0) {
+          totalOwe++;%>
+          <div><%=gp.users[i]%> owes you <%=-1*gp.bals[i]%></div>
+        <%} else if(gp.bals[i] > 0) {
+          totalOwe++%>
+          <div>You owe <%=gp.users[i]%> <%=gp.bals[i]%></div>
+        <%}} 
+        if (totalOwe == 0) {%>
+          <div>All settled</div>
+        <%}%>
+    </div>
+</div>
+</div>
+<%});%>

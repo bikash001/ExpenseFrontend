@@ -1,0 +1,32 @@
+<div style="background-color: #ddffdd;">
+	<div>
+		<%=group.name%>
+	</div>
+	<div style="background-color: #616161;">
+		<div>
+		Group Members: <% for (var i=0; i<group.users.length-1; ++i){%>
+			<%=group.users[i]%>,
+		<%}%>
+		<%=group.users[group.users.length-1]%>
+		</div>
+		<div>
+			created on <%=group.created_on%>
+		</div>
+	</div>
+	<div style="background-color: teal;">
+		
+		<ul class="list-group list-group-flush">
+        <% _.each(group.bills, function(bill, index) {%>
+          <li id="bill-<%=bill.id%>" class="list-group-item">
+            <div class="row" style="width:100%">
+              <div class="col-xs-12">
+                  <div><%=bill.name%></div>
+                  <div>Total amount <%=bill.amount%></div>
+              </div>
+            </div>
+          </li>
+          <%});%>
+        </ul>
+
+	</div>
+</div>
