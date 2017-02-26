@@ -1,3 +1,6 @@
+<div style="background-color: teal; color: white; padding: 10px; margin-bottom: 10px;">
+	Notifications
+</div>
 <% if(bills.length == 0){%>
 <div style="background-color: white; color: black; margin: 15px; border: 1px solid white; border-radius: 8px; padding: 15px;">
 	No bills exist.
@@ -7,11 +10,17 @@ _.each(bills, function(bill) {%>
 	<div style="background-color: white; color: black; margin: 15px; border: 1px solid white; border-radius: 8px; padding: 15px;">
 		<div>Status: pending <%=bill.pending%></div>
 		<div>Total amount: <%=bill.amount%></div>
+		<div>
 		<% var myshare = _.find(bill.splits, function(el){return el[0]== userName;});
-		if (myshare[1] < -1*myshare[2]) {%>
-			You are owed <%=-1*myshare[2] - myshare[1]%>
+
+		if (myshare[0][1] < -1*myshare[0][2]) {%>
+			You are owed <%=-1*myshare[0][2] - myshare[0][1]%>
 		<%} else {%>
-			You owe <%= myshare[1] + myshare[2]%>
+			You owe <%= myshare[0][1] + myshare[0][2]%>
 		<%}%>
+		</div>
+		<div>
+		<button class="unacked-bill" id="<%=bill.id%>" class="btn btn-default">Ack</button>
+		</div>
 	</div>
 <%});}%>

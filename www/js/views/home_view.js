@@ -196,6 +196,7 @@ define(['underscore', 'backbone', 'jquery', 'lib/slideout', "lib/bootbox.min", "
 							mobile: "mobile"
 					}
 				*/
+				var that = this;
 				var baseurl = "http://localhost:8001";
 				var dataObj = JSON.parse(localStorage.getItem("user-token"));
 				$.ajax({
@@ -205,13 +206,19 @@ define(['underscore', 'backbone', 'jquery', 'lib/slideout', "lib/bootbox.min", "
 				  	xhr.setRequestHeader("Authorization", "token "+dataObj.token);
 				  },
 				  success: function(dataVal){
-				  	var userData = localStorage.getItem("user-local-data") || {} ;
-				  	if (userData.name == undefined) {
+				  	var userData = localStorage.getItem("user-local-data");// || {} ;
+				  	console.log('userdata', userData);
+				  	if (userData == undefined) {
+				  		userData = {};
 				  		userData["name"] = dataVal.name;
 				  		userData["email"] = dataVal.email;
 				  		userData["mobile"] = dataVal.mobile;
+				  		console.log("writing localStorage");
 				  		localStorage.setItem("user-local-data", JSON.stringify(userData));
+				  		that.user_local_data = userData;
 				  		$('#user-name').html(dataVal.name);
+				  	} else {
+				  		that.user_local_data = JSON.parse(localStorage.getItem("user-local-data"));
 				  	}
 				  	var summary = dataVal.summary;
 				  	if (!_.isEmpty(summary)) {
@@ -226,6 +233,14 @@ define(['underscore', 'backbone', 'jquery', 'lib/slideout', "lib/bootbox.min", "
 				  	console.log("failure");
 				  	console.log(val);
 				  }
+				});
+			},
+			insideUnacked: function() {
+				var that = this;
+				$('.unacked-bill').on('click', function() {
+					console.log("id",this.id);
+					$(this).addClass("hide");
+					that.sendData("/bills/ack", {"id": this.id});
 				});
 			},
 			contact: function() {
@@ -251,10 +266,12 @@ define(['underscore', 'backbone', 'jquery', 'lib/slideout', "lib/bootbox.min", "
 				  	console.log(dataVal);
 				  	require(["text!templates/notifications.html"], function(NotificationTemp){
 				  		var compiled_template = _.template(NotificationTemp);
-				  		dataVal["userName"] = JSON.parse(localStorage.getItem("user-local-data")).name;
+				  		dataVal["userName"] = that.user_local_data.mobile;
+				  		console.log(dataVal['userName']);
 				  		$('#middle-section').empty();
 				  		$('#middle-section').append(compiled_template(dataVal));
 				  		that.in_home = false;
+				  		that.insideUnacked();
 				  	});
 				  },
 				  error: function(val) {
